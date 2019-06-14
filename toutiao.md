@@ -1,7 +1,7 @@
 # 1.性能优化
-有道笔记搜索【性能优化】
+全局搜索【性能优化】
 # 2.vue virtual dom diff算法
-有道笔记搜索【vue diff算法原理实现】
+全局搜索【vue diff算法原理实现】
 
 # 3.vue响应式实现原理
 Object.defineProperty get收集依赖 set通知依赖更新
@@ -13,7 +13,7 @@ Object.defineProperty get收集依赖 set通知依赖更新
 通过观察者模式，当调用方法的时候，将此观察者收集起来，下次修改数据的时候，通知观察者更新
 
 # 6.Koa中间件
-有道搜索【koa中间件实现原理】
+全局搜索【koa中间件实现原理】
 
 # 7.手撕Promise.all
 ```
