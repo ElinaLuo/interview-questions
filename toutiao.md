@@ -73,3 +73,103 @@ co模块约定，yield命令后面只能是 Thunk 函数或 Promise 对象(实�
 事件监听: 没有正确销毁 (低版本浏览器可能出现)
 闭包: 会导致父级中的变量无法被释放
 dom 引用: dom 元素被删除时，内存中的引用未被正确清空
+
+# 12.编程题
+补充下面缺少的代码，条件：实现最多有2个异步任务在执行
+```
+class Scheduler {
+  /**
+  * @param {function}
+  * @return {Promise}
+   */
+  add(promiseCreator) {
+    //...
+  }
+
+  //...
+}
+//最多有2个异步任务在执行
+const timeout = time => () => new Promise(resolve => {
+  setTimeout(resolve, time)
+})
+
+
+const scheduler = new Scheduler();
+
+const addSchedule = (time, order) => {
+  scheduler.add(timeout(time)).then(() => {
+    console.log(order)
+  })
+}
+
+
+
+addSchedule(1000, 1)
+addSchedule(500, 2)
+addSchedule(300, 3)
+addSchedule(400, 4)
+
+// 2, 3, 1, 4
+```
+
+答案：
+```
+const MAX = 2
+
+class Scheduler {
+  constructor() {
+    this.tasks = []
+    this.count = 0
+  }
+  /**
+  * @param {function}
+  * @return {Promise}
+   */
+  add(promiseCreator) {
+    return new Promise(resolve => {
+      this.tasks.push(() => {
+        return promiseCreator().then(resolve)
+      })
+
+      this.run();
+    })
+  }
+
+  run() {
+    if (this.count < MAX && this.tasks.length > 0) {
+      this.count += 1;
+      const task = this.tasks.shift();
+      task().then(() => this.done())
+    }
+  }
+
+  done() {
+    this.count -= 1;
+    this.run();
+  }
+}
+//最多有2个异步任务在执行
+
+const timeout = time => () => new Promise(resolve => {
+  setTimeout(resolve, time)
+})
+
+
+const scheduler = new Scheduler();
+
+const addSchedule = (time, order) => {
+  scheduler.add(timeout(time)).then(() => {
+    console.log(order)
+  })
+}
+
+
+
+addSchedule(1000, 1)
+addSchedule(500, 2)
+addSchedule(300, 3)
+addSchedule(400, 4)
+
+// 2, 3, 1, 4
+
+```
